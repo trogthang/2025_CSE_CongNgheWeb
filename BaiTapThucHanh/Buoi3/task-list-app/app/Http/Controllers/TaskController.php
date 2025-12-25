@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Task;
+use Illuminate\Http\Request;
+
+class TaskController extends Controller
+{
+    // Hiển thị danh sách task
+    public function index()
+    {
+        $tasks = Task::all();
+        return view('tasks.index', compact('tasks'));
+    }
+
+    // Form thêm task
+    public function create()
+    {
+        return view('tasks.create');
+    }
+
+    // Lưu task mới
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+        ]);
+
+        Task::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'long_description' => $request->long_description,
+            'completed' => $request->has('completed'),
+        ]);
+
+        return redirect()->route('tasks.index');
+    }
+}
